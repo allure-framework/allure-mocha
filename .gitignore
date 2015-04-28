@@ -1,0 +1,7 @@
+## Temporary files dir
+test/e2e/out
+
+# Dependency directory
+node_modules
+
+

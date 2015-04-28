@@ -1,0 +1,24 @@
+{
+  "name": "mocha-allure-reporter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run unit && npm run e2e-test",
+    "unit": "mocha test/unit/",
+    "e2e-clean": "rm -rf test/e2e/out",
+    "e2e-test": "npm run e2e-clean && node test/e2e/main.spec.js && allure generate test/e2e/out -o test/e2e/out"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "libxmljs": "^0.14.0",
+    "mockery": "^1.4.0",
+    "sinon": "^1.14.1",
+    "sinon-chai": "^2.7.0"
+  },
+  "dependencies": {
+    "mocha": "^2.2.4"
+  }
+}

@@ -1,5 +1,5 @@
-# mocha-allure-reporter
-Allure reporter for Mocha
+# mocha-allure-reporter [![Build Status](https://travis-ci.org/allure-framework/mocha-allure-reporter.svg?branch=master)](https://travis-ci.org/allure-framework/mocha-allure-reporter)
+Allure reporter for Mocha 
 
 ## Installation
 
@@ -9,16 +9,16 @@ Assume that you have [mocha](http://mochajs.org/) installed, install reporter vi
 npm install mocha-allure-reporter
 ```
 
-Then use it as any another mocha reporter
+Then use it as any other mocha reporter
 
 ```
 mocha --reporter mocha-allure-reporter
 ```
 
-After tests you will get raw tests result into `allure-results` directory. 
+After tests you get raw tests result into `allure-results` directory. 
 See [generator list](https://github.com/allure-framework/allure-core/wiki#generating-a-report) to know how make a 
 report from raw results.
 
 ## Supported options
 
-* targetDir _(string)_ – directory where will be stored test results
+* targetDir _(string)_ – directory where test results will be stored 

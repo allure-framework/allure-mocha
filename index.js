@@ -34,13 +34,13 @@ function AllureReporter(runner, opts) {
     });
 
     runner.on('pass', function(test) {
-        addStepsInfo(test.parent);
+        addStepsInfo(test.parent.fullTitle());
         allure.endCase(test.parent.fullTitle(), test.title, 'passed');
     });
 
     runner.on('fail', function(test, err) {
         var status = err.name === 'AssertionError' ? 'failed' : 'broken';
-        addStepsInfo(test.parent);
+        addStepsInfo(test.parent.fullTitle());
         allure.endCase(test.parent.fullTitle(), test.title, status, err);
     });
 

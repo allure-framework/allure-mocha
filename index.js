@@ -34,13 +34,26 @@ function AllureReporter(runner, opts) {
     });
 
     runner.on('pass', function(test) {
+        addStepsInfo(test.parent);
         allure.endCase(test.parent.fullTitle(), test.title, 'passed');
     });
 
     runner.on('fail', function(test, err) {
         var status = err.name === 'AssertionError' ? 'failed' : 'broken';
+        addStepsInfo(test.parent);
         allure.endCase(test.parent.fullTitle(), test.title, status, err);
     });
+
+    function addStepsInfo(suite) {
+        var publishSubsteps = function(step) {
+            allure.startStep(suite, step.name, step.start);
+            step.steps.forEach(publishSubsteps, this);
+            allure.endStep(suite, step.name, step.status, step.stop)
+        };
+
+        global.allure.report.steps.forEach(publishSubsteps);
+        global.allure.flushReport();
+    }
 }
 
 AllureReporter.prototype.__proto__ = Base.prototype;

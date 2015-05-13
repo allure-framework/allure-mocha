@@ -56,7 +56,7 @@ function AllureReporter(runner, opts) {
 
         global.allure.report.steps.forEach(publishSubsteps);
         global.allure.report.attachments.forEach(function(attachment) {
-            allure.addAttachment(suite, attachment.name, attachment.buffer);
+            allure.addAttachment(suite, attachment.name, attachment.buffer, attachment.type);
         });
         global.allure.flushReport();
     }

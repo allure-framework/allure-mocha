@@ -40,6 +40,9 @@ function AllureReporter(runner, opts) {
 
     runner.on('fail', function(test, err) {
         var status = err.name === 'AssertionError' ? 'failed' : 'broken';
+        if(global.onError) {
+            global.onError();
+        }
         addExtraInfo(test.parent.fullTitle());
         allure.endCase(test.parent.fullTitle(), test.title, status, err);
     });

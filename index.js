@@ -18,7 +18,7 @@ function AllureReporter(runner, opts) {
         Suite = function(parent) {
             this.allure = new Allure(options);
             this.parent = parent;
-            global.allure = this.allure;
+            global.allure.setAllure(this.allure);
         },
         currentMochaSuite = null;
 

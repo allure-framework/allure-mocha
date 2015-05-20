@@ -15,30 +15,33 @@ module.exports = AllureReporter;
 function AllureReporter(runner, opts) {
     Base.call(this, runner);
     var options = (opts && opts.reporterOptions) || {},
-        allure = new Allure(options);
-
-    runner.on('start', function() {
-        global.allure = allure;
-    });
+        Suite = function(parent) {
+            this.allure = new Allure(options);
+            this.parent = parent;
+            global.allure = this.allure;
+        },
+        currentSuite = null;
 
     runner.on('suite', function (suite) {
-        allure.startSuite(suite.fullTitle());
+        currentSuite = new Suite(currentSuite);
+        currentSuite.allure.startSuite(suite.fullTitle());
     });
 
     runner.on('suite end', function (suite) {
-        allure.endSuite(suite.fullTitle());
+        currentSuite.allure.endSuite(suite.fullTitle());
+        currentSuite = currentSuite.parent;
     });
 
     runner.on('test', function(test) {
-        allure.startCase(test.parent.fullTitle(), test.title);
+        currentSuite.allure.startCase(test.title);
     });
 
     runner.on('pending', function(test) {
-        allure.pendingCase(test.parent.fullTitle(), test.title);
+        currentSuite.allure.pendingCase(test.title);
     });
 
-    runner.on('pass', function(test) {
-        allure.endCase(test.parent.fullTitle(), test.title, 'passed');
+    runner.on('pass', function() {
+        currentSuite.allure.endCase('passed');
     });
 
     runner.on('fail', function(test, err) {
@@ -46,7 +49,7 @@ function AllureReporter(runner, opts) {
         if(global.onError) {
             global.onError();
         }
-        allure.endCase(test.parent.fullTitle(), test.title, status, err);
+        currentSuite.allure.endCase(status, err);
     });
 }
 

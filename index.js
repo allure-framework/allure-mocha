@@ -20,28 +20,28 @@ function AllureReporter(runner, opts) {
             this.parent = parent;
             global.allure = this.allure;
         },
-        currentSuite = null;
+        currentMochaSuite = null;
 
     runner.on('suite', function (suite) {
-        currentSuite = new Suite(currentSuite);
-        currentSuite.allure.startSuite(suite.fullTitle());
+        currentMochaSuite = new Suite(currentMochaSuite);
+        currentMochaSuite.allure.startSuite(suite.fullTitle());
     });
 
     runner.on('suite end', function (suite) {
-        currentSuite.allure.endSuite(suite.fullTitle());
-        currentSuite = currentSuite.parent;
+        currentMochaSuite.allure.endSuite();
+        currentMochaSuite = currentMochaSuite.parent;
     });
 
     runner.on('test', function(test) {
-        currentSuite.allure.startCase(test.title);
+        currentMochaSuite.allure.startCase(test.title);
     });
 
     runner.on('pending', function(test) {
-        currentSuite.allure.pendingCase(test.title);
+        currentMochaSuite.allure.pendingCase(test.title);
     });
 
     runner.on('pass', function() {
-        currentSuite.allure.endCase('passed');
+        currentMochaSuite.allure.endCase('passed');
     });
 
     runner.on('fail', function(test, err) {
@@ -49,7 +49,7 @@ function AllureReporter(runner, opts) {
         if(global.onError) {
             global.onError();
         }
-        currentSuite.allure.endCase(status, err);
+        currentMochaSuite.allure.endCase(status, err);
     });
 }
 

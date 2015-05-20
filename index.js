@@ -1,5 +1,6 @@
 var Base = require('mocha').reporters.Base,
-    Allure = require('allure-js-commons');
+    Allure = require('allure-js-commons'),
+    AllureRuntime = require('allure-js-commons/runtime');
 
 
 module.exports = AllureReporter;
@@ -16,6 +17,10 @@ function AllureReporter(runner, opts) {
     Base.call(this, runner);
     var options = (opts && opts.reporterOptions) || {},
         allure = new Allure(options);
+
+    runner.on('start', function() {
+        global.allure = new AllureRuntime(allure);
+    });
 
     runner.on('suite', function (suite) {
         allure.startSuite(suite.fullTitle());
@@ -34,7 +39,6 @@ function AllureReporter(runner, opts) {
     });
 
     runner.on('pass', function(test) {
-        addExtraInfo(test.parent.fullTitle());
         allure.endCase(test.parent.fullTitle(), test.title, 'passed');
     });
 
@@ -43,23 +47,8 @@ function AllureReporter(runner, opts) {
         if(global.onError) {
             global.onError();
         }
-        addExtraInfo(test.parent.fullTitle());
         allure.endCase(test.parent.fullTitle(), test.title, status, err);
     });
-
-    function addExtraInfo(suite) {
-        var publishSubsteps = function(step) {
-            allure.startStep(suite, step.name, step.start);
-            step.steps.forEach(publishSubsteps, this);
-            allure.endStep(suite, step.name, step.status, step.stop);
-        };
-
-        global.allure.report.steps.forEach(publishSubsteps);
-        global.allure.report.attachments.forEach(function(attachment) {
-            allure.addAttachment(suite, attachment.name, attachment.buffer, attachment.type);
-        });
-        global.allure.flushReport();
-    }
 }
 
 AllureReporter.prototype.__proto__ = Base.prototype;

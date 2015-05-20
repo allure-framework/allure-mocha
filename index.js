@@ -19,7 +19,7 @@ function AllureReporter(runner, opts) {
         allure = new Allure(options);
 
     runner.on('start', function() {
-        global.allure = new AllureRuntime(allure);
+        global.allure = allure;
     });
 
     runner.on('suite', function (suite) {

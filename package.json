@@ -19,7 +19,7 @@
     "sinon-chai": "^2.7.0"
   },
   "dependencies": {
-    "allure-js-commons": "git+https://github.com/d0lfin/allure-js-commons.git#singlesuite",
+    "allure-js-commons": "git+https://github.com/d0lfin/allure-js-commons.git#singlesuite2",
     "mocha": "^2.2.4"
   }
 }

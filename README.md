@@ -6,14 +6,13 @@ Allure reporter for Mocha
 Assume that you have [mocha](http://mochajs.org/) installed, install reporter via npm:
 
 ```
-npm install allure-js-commons
 npm install mocha-allure-reporter
 ```
 
 Then use it as any other mocha reporter
 
 ```
-mocha --reporter mocha-allure-reporter -r 'allure-js-commons/runtime'
+mocha --reporter mocha-allure-reporter
 ```
 
 After tests you get raw tests result into `allure-results` directory. 

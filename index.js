@@ -3,7 +3,7 @@ var Base = require('mocha').reporters.Base,
     allureReporter = new Allure(),
     Runtime = require('allure-js-commons/runtime');
 
-global.allure = new Runtime(allure);
+global.allure = new Runtime(allureReporter);
 module.exports = AllureReporter;
 
 /**

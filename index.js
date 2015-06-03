@@ -1,6 +1,6 @@
 var Base = require('mocha').reporters.Base,
     Allure = require('allure-js-commons'),
-    allureReporter = new Allure(),
+    allureReporter = new Allure({}),
     Runtime = require('allure-js-commons/runtime');
 
 global.allure = new Runtime(allureReporter);

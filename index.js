@@ -1,7 +1,9 @@
 var Base = require('mocha').reporters.Base,
-    Allure = require('allure-js-commons');
+    Allure = require('allure-js-commons'),
+    allureReporter = new Allure(),
+    Runtime = require('allure-js-commons/runtime');
 
-
+global.allure = new Runtime(allure);
 module.exports = AllureReporter;
 
 /**
@@ -14,42 +16,33 @@ module.exports = AllureReporter;
 
 function AllureReporter(runner, opts) {
     Base.call(this, runner);
-    var options = (opts && opts.reporterOptions) || {},
-        Suite = function(parent) {
-            this.allure = new Allure(options);
-            this.parent = parent;
-            global.allure.setAllure(this.allure);
-        },
-        currentMochaSuite = null;
 
     runner.on('suite', function (suite) {
-        currentMochaSuite = new Suite(currentMochaSuite);
-        currentMochaSuite.allure.startSuite(suite.fullTitle());
+        allureReporter.startSuite(suite.fullTitle());
     });
 
     runner.on('suite end', function (suite) {
-        currentMochaSuite.allure.endSuite();
-        currentMochaSuite = currentMochaSuite.parent;
+        allureReporter.endSuite();
     });
 
     runner.on('test', function(test) {
-        currentMochaSuite.allure.startCase(test.title);
+        allureReporter.startCase(test.title);
     });
 
     runner.on('pending', function(test) {
-        currentMochaSuite.allure.pendingCase(test.title);
+        allureReporter.pendingCase(test.title);
     });
 
     runner.on('pass', function() {
-        currentMochaSuite.allure.endCase('passed');
+        allureReporter.endCase('passed');
     });
 
     runner.on('fail', function(test, err) {
         var status = err.name === 'AssertionError' ? 'failed' : 'broken';
         if(global.onError) {
-            global.onError();
+            global.onError(err);
         }
-        currentMochaSuite.allure.endCase(status, err);
+        allureReporter.endCase(status, err);
     });
 }
 

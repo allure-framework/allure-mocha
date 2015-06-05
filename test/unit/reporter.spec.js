@@ -14,17 +14,30 @@ mockery.enable({
 });
 
 var allureMock = sinon.stub({
-    startSuite: function() {},
-    endSuite: function() {},
-    getSuite: function() {},
-    startCase: function() {},
-    endCase: function() {},
-    pendingCase: function() {}
-});
+        setOptions: function() {},
+        startSuite: function() {},
+        endSuite: function() {},
+        getSuite: function() {},
+        startCase: function() {},
+        endCase: function() {},
+        pendingCase: function() {}
+    }),
+    runtimeMock = sinon.stub({
+        createStep: function() {},
+        createAttachment: function() {},
+        addLabel: function() {}
+    });
+runtimeMock.createStep.returns(function() {});
+runtimeMock.createAttachment.returns(function() {});
+
 
 mockery.registerMock('allure-js-commons', function() {
     return allureMock;
 });
+mockery.registerMock('allure-js-commons/runtime', function() {
+    return runtimeMock;
+});
+
 
 var reporter = require('../../');
 describe("Allure reporter", function() {
@@ -38,22 +51,19 @@ describe("Allure reporter", function() {
             expect(allureMock.startSuite.secondCall).calledWithExactly('A mocha suite');
             expect(allureMock.startSuite.thirdCall).calledWithExactly('A mocha suite passing');
             expect(allureMock.endSuite).callCount(3);
-            expect(allureMock.endSuite.firstCall).calledWithExactly('A mocha suite passing');
-            expect(allureMock.endSuite.secondCall).calledWithExactly('A mocha suite');
 
             expect(allureMock.startCase.firstCall).calledAfter(allureMock.startSuite.secondCall);
-            expect(allureMock.startCase.firstCall).calledWithExactly('A mocha suite', 'broken test');
-            expect(allureMock.endCase.firstCall).calledWith('A mocha suite', 'broken test', 'broken', sinon.match.instanceOf(Error));
+            expect(allureMock.startCase.firstCall).calledWithExactly('broken test');
+            expect(allureMock.endCase.firstCall).calledWith('broken', sinon.match.instanceOf(Error));
 
-            expect(allureMock.startCase.secondCall).calledWithExactly('A mocha suite', 'failed test');
-            expect(allureMock.endCase.secondCall).calledWith('A mocha suite', 'failed test', 'failed', sinon.match.instanceOf(Error));
+            expect(allureMock.startCase.secondCall).calledWithExactly('failed test');
+            expect(allureMock.endCase.secondCall).calledWith('failed', sinon.match.instanceOf(Error));
 
-            expect(allureMock.startCase.thirdCall).calledWithExactly('A mocha suite passing', 'simple test');
-            expect(allureMock.endCase.thirdCall).calledWith('A mocha suite passing', 'simple test', 'passed');
+            expect(allureMock.startCase.thirdCall).calledWithExactly('simple test');
+            expect(allureMock.endCase.thirdCall).calledWith('passed');
 
             expect(allureMock.pendingCase).calledOnce;
-            expect(allureMock.pendingCase.firstCall).calledWith('A mocha suite', 'pending test');
-
+            expect(allureMock.pendingCase.firstCall).calledWith('pending test');
 
             done();
         })

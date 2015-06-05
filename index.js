@@ -1,6 +1,6 @@
 var Base = require('mocha').reporters.Base,
     Allure = require('allure-js-commons'),
-    allureReporter = new Allure({}),
+    allureReporter = new Allure(),
     Runtime = require('allure-js-commons/runtime');
 
 global.allure = new Runtime(allureReporter);
@@ -13,9 +13,9 @@ module.exports = AllureReporter;
  * @param {Object} opts mocha options
  * @api public
  */
-
 function AllureReporter(runner, opts) {
     Base.call(this, runner);
+    allureReporter.setOptions(opts.reporterOptions);
 
     runner.on('suite', function (suite) {
         allureReporter.startSuite(suite.fullTitle());

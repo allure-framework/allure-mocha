@@ -7,7 +7,7 @@
     "test": "npm run unit && npm run e2e-test",
     "unit": "mocha test/unit/",
     "e2e-clean": "rm -rf test/e2e/out",
-    "e2e-test": "npm run e2e-clean && node test/e2e/main.spec.js && allure generate test/e2e/out -o test/e2e/out"
+    "e2e-test": "npm run e2e-clean && node test/e2e/main.spec.js && allure generate test/e2e/out -v 1.4.11 -o test/e2e/out"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +19,7 @@
     "sinon-chai": "^2.7.0"
   },
   "dependencies": {
-    "allure-js-commons": "git+https://github.com/allure-framework/allure-js-commons.git",
+    "allure-js-commons": "1.0.2",
     "mocha": "^2.2.4"
   }
 }

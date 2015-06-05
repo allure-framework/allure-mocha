@@ -9,15 +9,15 @@ var fs = require('fs'),
         }
     });
 
-fs.readdirSync(path.join(__dirname, '../fixtures')).filter(function(file){
+fs.readdirSync(path.join(__dirname, '../fixtures')).filter(function(file) {
     return file.substr(-7) === 'spec.js';
-}).forEach(function(file){
+}).forEach(function(file) {
     mocha.addFile(
         path.join(__dirname, '../fixtures', file)
     );
 });
 
-mocha.run(function(){
+mocha.run(function() {
     var libxmljs = require("libxmljs"),
         xsdDoc = libxmljs.parseXml(fs.readFileSync(path.join(__dirname, 'schema/allure.xsd'))),
         result = fs.readdirSync(outDir).filter(function(file) {
@@ -33,5 +33,3 @@ mocha.run(function(){
         });
     process.exit(result ? 0 : 1)
 });
-
-

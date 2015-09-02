@@ -1,10 +1,10 @@
-var Base = require('mocha').reporters.Base,
-    Allure = require('allure-js-commons'),
-    allureReporter = new Allure(),
-    Runtime = require('allure-js-commons/runtime');
+"use strict";
+var Base = require("mocha").reporters.Base;
+var Allure = require("allure-js-commons");
+var allureReporter = new Allure();
+var Runtime = require("allure-js-commons/runtime");
 
 global.allure = new Runtime(allureReporter);
-module.exports = AllureReporter;
 
 /**
  * Initialize a new `Allure` test reporter.
@@ -17,28 +17,28 @@ function AllureReporter(runner, opts) {
     Base.call(this, runner);
     allureReporter.setOptions(opts.reporterOptions || {});
 
-    runner.on('suite', function (suite) {
+    runner.on("suite", function (suite) {
         allureReporter.startSuite(suite.fullTitle());
     });
 
-    runner.on('suite end', function (suite) {
+    runner.on("suite end", function () {
         allureReporter.endSuite();
     });
 
-    runner.on('test', function(test) {
+    runner.on("test", function(test) {
         allureReporter.startCase(test.title);
     });
 
-    runner.on('pending', function(test) {
+    runner.on("pending", function(test) {
         allureReporter.pendingCase(test.title);
     });
 
-    runner.on('pass', function() {
-        allureReporter.endCase('passed');
+    runner.on("pass", function() {
+        allureReporter.endCase("passed");
     });
 
-    runner.on('fail', function(test, err) {
-        var status = err.name === 'AssertionError' ? 'failed' : 'broken';
+    runner.on("fail", function(test, err) {
+        var status = err.name === "AssertionError" ? "failed" : "broken";
         if(global.onError) {
             global.onError(err);
         }
@@ -46,4 +46,4 @@ function AllureReporter(runner, opts) {
     });
 }
 
-AllureReporter.prototype.__proto__ = Base.prototype;
+module.exports = AllureReporter;

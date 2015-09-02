@@ -1,16 +1,16 @@
 {
   "name": "mocha-allure-reporter",
   "version": "1.1.1",
-  "description": "",
+  "description": "Mocha reporter for Allure framework",
   "main": "index.js",
+  "repository": "git@github.com:allure-framework/mocha-allure-reporter.git",
   "scripts": {
     "test": "npm run unit && npm run e2e-test",
     "unit": "mocha test/unit/",
     "e2e-clean": "rm -rf test/e2e/out",
     "e2e-test": "npm run e2e-clean && node test/e2e/main.spec.js && allure generate test/e2e/out -v 1.4.11 -o test/e2e/out"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "devDependencies": {
     "chai": "^2.3.0",
     "libxmljs": "^0.14.0",

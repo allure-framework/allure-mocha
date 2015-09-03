@@ -11,9 +11,7 @@ describe("A mocha suite", function() {
         }),
         firstStep = allure.createStep("simple step", function() {});
 
-    beforeEach(function() {
-
-    });
+    beforeEach(function() {});
 
     describe("passing", function() {
         it("simple test", function() {

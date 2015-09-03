@@ -22,7 +22,7 @@
     "sinon-chai": "^2.7.0"
   },
   "dependencies": {
-    "allure-js-commons": "1.0.2",
+    "allure-js-commons": "1.0.3",
     "mocha": "^2.2.4"
   }
 }

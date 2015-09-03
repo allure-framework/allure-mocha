@@ -44,6 +44,12 @@ function AllureReporter(runner, opts) {
         }
         allureReporter.endCase(status, err);
     });
+
+    runner.on("hook end", function(hook) {
+        if(hook.title.indexOf('"after each" hook') === 0) {
+            allureReporter.endCase("passed");
+        }
+    });
 }
 
 module.exports = AllureReporter;

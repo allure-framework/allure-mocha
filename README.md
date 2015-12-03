@@ -38,3 +38,5 @@ Allure is a test framework which provides more data from tests than usual. Once 
 * `allure.severity(severity)` – set test severity, one of: `blocker`, `critical`, `normal`, `minor`, `trivial`. You can also use constants like `allure.SEVERITY.BLOKER`.
 * `allure.feature(featureName)` – assign feature to test
 * `allure.story(storyName)` – assign user story to test. See [documentation](https://github.com/allure-framework/allure-core/wiki/Features-and-Stories) for details
+* `allure.addArgument(name, value)` - provide parameters, which had been used in test. Unlike other languages, javascript test methods usually doesn't have special arguments (only callbacks), so developers use other way to populate parameters to test. This method is to provide them to Allure
+* `allure.addEnvironment(name, value)` - save environment value. It is similar to `addArgument` method, but it is designed to store more verbose data, like HTTP-links to test page or used package version.

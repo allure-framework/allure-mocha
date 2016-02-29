@@ -102,6 +102,7 @@ describe("Allure reporter", function() {
             expect(allureMock.startCase.secondCall).calledWithExactly('a test');
             expect(allureMock.endCase).to.have.been.calledTwice;
 
+            expect(status).to.be.equal(1);
             done();
         })
     });

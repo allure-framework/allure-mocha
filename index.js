@@ -38,6 +38,9 @@ function AllureReporter(runner, opts) {
     });
 
     runner.on("fail", function(test, err) {
+        if(!allureReporter.getCurrentTest()) {
+            allureReporter.startCase(test.title);
+        }
         var status = err.name === "AssertionError" ? "failed" : "broken";
         if(global.onError) {
             global.onError(err);

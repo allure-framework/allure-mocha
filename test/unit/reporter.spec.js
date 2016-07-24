@@ -106,4 +106,28 @@ describe("Allure reporter", function() {
             done();
         })
     });
+    it("should report test results with 'retries' option", function(done) {
+        var mocha = new Mocha({
+            reporter: reporter
+        });
+        mocha.addFile(path.join(__dirname, '../fixtures/retries.spec.js'));
+        mocha.run(function() {
+            expect(allureMock.startSuite).callCount(2);
+            expect(allureMock.startSuite.secondCall).calledWithExactly('A mocha suite with "retries" option');
+            expect(allureMock.endSuite).callCount(2);
+            expect(allureMock.startCase).callCount(3);
+            expect(allureMock.endCase).callCount(3);
+
+            expect(allureMock.startCase.firstCall).calledWithExactly('passing test');
+            expect(allureMock.endCase.firstCall).calledWith('passed');
+
+            expect(allureMock.startCase.secondCall).calledWithExactly('failed test');
+            expect(allureMock.endCase.secondCall).calledWith('failed', sinon.match.instanceOf(Error));
+
+            expect(allureMock.startCase.thirdCall).calledWithExactly('passing test after retry');
+            expect(allureMock.endCase.thirdCall).calledWith('passed');
+
+            done();
+        })
+    });
 });

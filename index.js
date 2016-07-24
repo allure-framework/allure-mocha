@@ -26,7 +26,9 @@ function AllureReporter(runner, opts) {
     });
 
     runner.on("test", function(test) {
-        allureReporter.startCase(test.title);
+        if (!test.currentRetry()) {
+          allureReporter.startCase(test.title);
+        }
     });
 
     runner.on("pending", function(test) {

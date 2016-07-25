@@ -7,9 +7,9 @@ chai.use(require("dirty-chai"));
 
 describe("A mocha suite", function() {
     var dumpLog = allure.createAttachment("my log [{0}]", function(level, log) {
-            return new Buffer(log, "utf-8");
-        }),
-        firstStep = allure.createStep("simple step", function() {});
+        return new Buffer(log, "utf-8");
+    });
+    var firstStep = allure.createStep("simple step", function() {});
 
     beforeEach(function() {});
 

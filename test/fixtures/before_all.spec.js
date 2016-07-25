@@ -6,11 +6,11 @@ describe("Before all tests", function() {
         });
 
         it("a test", function() {});
-    })
+    });
 
     describe("before not broken", function() {
         before(function() {});
         it("a test", function() {});
-    })
+    });
 
 });

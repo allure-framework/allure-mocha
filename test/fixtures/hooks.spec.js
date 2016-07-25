@@ -15,7 +15,7 @@ describe("Hooks tests", function() {
         });
 
         it("a test", function() {});
-    })
+    });
 
     afterEach("passing afterEach", function() {});
 });

@@ -20,4 +20,3 @@ describe('A mocha suite with "retries" option', function() {
         expect(counter).to.equal(2);
     });
 });
-

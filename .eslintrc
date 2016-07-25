@@ -1,6 +1,11 @@
 {
+    "extends": "eslint:recommended",
     "env": {
         "node": true
     },
-    "rules": {}
+    "rules": {
+        "quotes": [2, "double", {"avoidEscape": true}],
+        "semi": 2,
+        "one-var": [2, "never"]
+    }
 }

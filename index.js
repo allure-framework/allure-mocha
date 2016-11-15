@@ -26,7 +26,7 @@ function AllureReporter(runner, opts) {
     });
 
     runner.on("test", function(test) {
-        if (!test.currentRetry()) {
+        if (typeof test.currentRetry !== "function" || !test.currentRetry()) {
           allureReporter.startCase(test.title);
         }
     });

@@ -2,7 +2,7 @@
 var fs = require("fs");
 var path = require("path");
 var Mocha = require("mocha");
-var outDir = path.join(__dirname, "out");
+var outDir = path.join(__dirname, "results");
 var mocha = new Mocha({
     reporter: require("../../"),
     reporterOptions: {

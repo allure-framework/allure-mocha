@@ -32,7 +32,12 @@ function AllureReporter(runner, opts) {
     });
 
     runner.on("pending", function(test) {
-        allureReporter.pendingCase(test.title);
+        var currentTest = allureReporter.getCurrentTest();
+        if(currentTest && currentTest.name === test.title) {
+            allureReporter.endCase("skipped");
+        } else {
+            allureReporter.pendingCase(test.title);
+        }
     });
 
     runner.on("pass", function() {

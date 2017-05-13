@@ -8,8 +8,8 @@
     "pretest": "eslint --ignore-path=.gitignore .",
     "test": "npm run unit && npm run e2e-test",
     "unit": "mocha test/unit/",
-    "e2e-clean": "rm -rf test/e2e/out",
-    "e2e-test": "npm run e2e-clean && node test/e2e/main.spec.js && allure generate test/e2e/out --clean -o test/e2e/out"
+    "e2e-clean": "rm -rf test/e2e/results",
+    "e2e-test": "npm run e2e-clean && node test/e2e/main.spec.js && allure generate test/e2e/results --clean -o test/e2e/report"
   },
   "license": "Apache-2.0",
   "devDependencies": {

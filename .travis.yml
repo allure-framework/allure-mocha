@@ -1,13 +1,23 @@
-language: node_js
-env:
-    - CXX=g++-4.8
+language: java
 addons:
-    apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        packages:
-        - g++-4.8
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
 
-node_js:
-  - "4"
-  - "6"
+jdk:
+  - oraclejdk8
+
+env:
+  global:
+    - CXX=g++-4.8
+  matrix:
+    - TRAVIS_NODE_VERSION=6
+    - TRAVIS_NODE_VERSION=4
+
+before_install:
+  - nvm install $TRAVIS_NODE_VERSION
+
+install: "npm install"
+script: "npm test"

@@ -9,21 +9,21 @@
     "test": "npm run unit && npm run e2e-test",
     "unit": "mocha test/unit/",
     "e2e-clean": "rm -rf test/e2e/out",
-    "e2e-test": "npm run e2e-clean && node test/e2e/main.spec.js && allure generate test/e2e/out -o test/e2e/out"
+    "e2e-test": "npm run e2e-clean && node test/e2e/main.spec.js && allure generate test/e2e/out --clean -o test/e2e/out"
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "allure-commandline": "^1.4.22-1",
-    "chai": "^2.3.0",
+    "allure-commandline": "^2.0.0",
+    "chai": "^3.5.0",
     "dirty-chai": "^1.1.0",
     "eslint": "^3.1.1",
     "libxmljs": "^0.18.0",
-    "mockery": "^1.4.0",
-    "sinon": "^1.14.1",
+    "mockery": "^2.0.0",
+    "sinon": "^2.2.0",
     "sinon-chai": "^2.7.0"
   },
   "dependencies": {
-    "allure-js-commons": "~1.2.0",
+    "allure-js-commons": "^1.2.0",
     "mocha": "^3.2.0"
   },
   "peerDependencies": {

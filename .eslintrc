@@ -7,6 +7,6 @@
         "quotes": [2, "double", {"avoidEscape": true}],
         "semi": 2,
         "one-var": [2, "never"],
-        "no-console": 1
+        "no-console": 0
     }
 }

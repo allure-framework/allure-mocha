@@ -130,4 +130,19 @@ describe("Allure reporter", function() {
             done();
         });
     });
+
+    it("should report internal errors", function(done) {
+        sinon.stub(console, "error");
+        var mocha = new Mocha({
+            reporter: reporter
+        });
+        allureMock.endSuite.onCall(1).throws();
+        mocha.addFile(path.join(__dirname, "../fixtures/retries.spec.js"));
+        mocha.run(function() {
+            expect(console.error).callCount(1);
+            expect(console.error).calledWith("Internal error in Allure:", sinon.match.instanceOf(Error));
+            console.error.restore();
+            done();
+        });
+    });
 });

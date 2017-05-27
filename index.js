@@ -17,34 +17,44 @@ function AllureReporter(runner, opts) {
     Base.call(this, runner);
     allureReporter.setOptions(opts.reporterOptions || {});
 
-    runner.on("suite", function (suite) {
+    function invokeHanlder(handler) {
+        return function() {
+            try {
+                return handler.apply(this, arguments);
+            } catch(error) {
+                console.error("Internal error in Allure:", error); // eslint-disable-line no-console
+            }
+        };
+    }
+
+    runner.on("suite", invokeHanlder(function (suite) {
         allureReporter.startSuite(suite.fullTitle());
-    });
+    }));
 
-    runner.on("suite end", function () {
+    runner.on("suite end", invokeHanlder(function () {
         allureReporter.endSuite();
-    });
+    }));
 
-    runner.on("test", function(test) {
+    runner.on("test", invokeHanlder(function(test) {
         if (typeof test.currentRetry !== "function" || !test.currentRetry()) {
           allureReporter.startCase(test.title);
         }
-    });
+    }));
 
-    runner.on("pending", function(test) {
+    runner.on("pending", invokeHanlder(function(test) {
         var currentTest = allureReporter.getCurrentTest();
         if(currentTest && currentTest.name === test.title) {
             allureReporter.endCase("skipped");
         } else {
             allureReporter.pendingCase(test.title);
         }
-    });
+    }));
 
-    runner.on("pass", function() {
+    runner.on("pass", invokeHanlder(function() {
         allureReporter.endCase("passed");
-    });
+    }));
 
-    runner.on("fail", function(test, err) {
+    runner.on("fail", invokeHanlder(function(test, err) {
         if(!allureReporter.getCurrentTest()) {
             allureReporter.startCase(test.title);
         }
@@ -53,13 +63,13 @@ function AllureReporter(runner, opts) {
             global.onError(err);
         }
         allureReporter.endCase(status, err);
-    });
+    }));
 
-    runner.on("hook end", function(hook) {
+    runner.on("hook end", invokeHanlder(function(hook) {
         if(hook.title.indexOf('"after each" hook') === 0) {
             allureReporter.endCase("passed");
         }
-    });
+    }));
 }
 
 module.exports = AllureReporter;

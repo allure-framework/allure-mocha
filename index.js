@@ -17,7 +17,7 @@ function AllureReporter(runner, opts) {
     Base.call(this, runner);
     allureReporter.setOptions(opts.reporterOptions || {});
 
-    function invokeHanlder(handler) {
+    function invokeHandler(handler) {
         return function() {
             try {
                 return handler.apply(this, arguments);
@@ -27,21 +27,21 @@ function AllureReporter(runner, opts) {
         };
     }
 
-    runner.on("suite", invokeHanlder(function (suite) {
+    runner.on("suite", invokeHandler(function (suite) {
         allureReporter.startSuite(suite.fullTitle());
     }));
 
-    runner.on("suite end", invokeHanlder(function () {
+    runner.on("suite end", invokeHandler(function () {
         allureReporter.endSuite();
     }));
 
-    runner.on("test", invokeHanlder(function(test) {
+    runner.on("test", invokeHandler(function(test) {
         if (typeof test.currentRetry !== "function" || !test.currentRetry()) {
           allureReporter.startCase(test.title);
         }
     }));
 
-    runner.on("pending", invokeHanlder(function(test) {
+    runner.on("pending", invokeHandler(function(test) {
         var currentTest = allureReporter.getCurrentTest();
         if(currentTest && currentTest.name === test.title) {
             allureReporter.endCase("skipped");
@@ -50,11 +50,11 @@ function AllureReporter(runner, opts) {
         }
     }));
 
-    runner.on("pass", invokeHanlder(function() {
+    runner.on("pass", invokeHandler(function() {
         allureReporter.endCase("passed");
     }));
 
-    runner.on("fail", invokeHanlder(function(test, err) {
+    runner.on("fail", invokeHandler(function(test, err) {
         if(!allureReporter.getCurrentTest()) {
             allureReporter.startCase(test.title);
         }
@@ -65,7 +65,7 @@ function AllureReporter(runner, opts) {
         allureReporter.endCase(status, err);
     }));
 
-    runner.on("hook end", invokeHanlder(function(hook) {
+    runner.on("hook end", invokeHandler(function(hook) {
         if(hook.title.indexOf('"after each" hook') === 0) {
             allureReporter.endCase("passed");
         }

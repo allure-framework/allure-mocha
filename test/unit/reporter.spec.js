@@ -1,6 +1,7 @@
 var path = require("path");
 var Mocha = require("mocha");
 var mockery = require("mockery");
+var AssertionError = require("assert").AssertionError;
 var chai = require("chai");
 var sinon = require("sinon");
 var sinonChai = require("sinon-chai");
@@ -103,6 +104,24 @@ describe("Allure reporter", function() {
             expect(allureMock.endCase).to.have.been.calledTwice;
 
             expect(status).to.be.equal(1);
+            done();
+        });
+    });
+    it("should handle tests using native node module 'assert'", function(done) {
+        var mocha = new Mocha({
+            reporter: reporter
+        });
+        mocha.addFile(path.join(__dirname, "../fixtures/assert.spec.js"));
+        mocha.run(function() {
+            expect(allureMock.startCase).callCount(2);
+            expect(allureMock.endCase).callCount(2);
+
+            expect(allureMock.startCase.firstCall).calledWithExactly("passing test");
+            expect(allureMock.endCase.firstCall).calledWith("passed");
+
+            expect(allureMock.startCase.secondCall).calledWithExactly("failed test");
+            expect(allureMock.endCase.secondCall).calledWith("failed", sinon.match.instanceOf(AssertionError));
+
             done();
         });
     });

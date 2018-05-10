@@ -16,7 +16,7 @@ describe("Allure reporter", function() {
     var reporter;
 
     beforeEach(function(){
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         mockery.enable({
             warnOnUnregistered: false,
             warnOnReplace: false,

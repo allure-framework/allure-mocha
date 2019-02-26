@@ -1,10 +1,18 @@
-"use strict";
-var Base = require("mocha").reporters.Base;
-var Allure = require("allure-js-commons");
-var allureReporter = new Allure();
-var Runtime = require("allure-js-commons/runtime");
+const Base = require('mocha').reporters.Base;
+const Allure = require('allure-js-commons');
+const Runtime = require('allure-js-commons/runtime');
+const AssertionError = require('chai').AssertionError;
+const WebDriverError = require('protractor').error.WebDriverError;
+
+const allureReporter = new Allure();
 
 global.allure = new Runtime(allureReporter);
+
+const ALLURE_OPTIONS = ['targetDir'];
+const allureOptions = {};
+const reporterOptions = {
+    ignoreErrors: true
+};
 
 /**
  * Initialize a new `Allure` test reporter.
@@ -13,64 +21,105 @@ global.allure = new Runtime(allureReporter);
  * @param {Object} opts mocha options
  * @api public
  */
-function AllureReporter(runner, opts) {
-    Base.call(this, runner);
-    allureReporter.setOptions(opts.reporterOptions || {});
 
-    function invokeHandler(handler) {
-        return function() {
-            try {
-                return handler.apply(this, arguments);
-            } catch(error) {
-                console.error("Internal error in Allure:", error); // eslint-disable-line no-console
-            }
-        };
+class AllureReporter extends Base {
+    constructor(runner, opts) {
+        super(runner);
+
+       this.parseOptions(opts.reporterOptions);
+
+        allureReporter.setOptions(allureOptions);
+
+        this.subscribeOnEvents(runner);
     }
 
-    runner.on("suite", invokeHandler(function (suite) {
-        allureReporter.startSuite(suite.fullTitle());
-    }));
-
-    runner.on("suite end", invokeHandler(function () {
-        allureReporter.endSuite();
-    }));
-
-    runner.on("test", invokeHandler(function(test) {
-        if (typeof test.currentRetry !== "function" || !test.currentRetry()) {
-          allureReporter.startCase(test.title);
+    parseOptions(options) {
+        if (!options) {
+            return;
         }
-    }));
 
-    runner.on("pending", invokeHandler(function(test) {
-        var currentTest = allureReporter.getCurrentTest();
-        if(currentTest && currentTest.name === test.title) {
-            allureReporter.endCase("skipped");
-        } else {
-            allureReporter.pendingCase(test.title);
-        }
-    }));
+        Object.keys(options).forEach(key => {
+            if (ALLURE_OPTIONS.includes(key)) {
+                allureOptions[key] = options[key];
+            } else {
+                reporterOptions[key] = options[key];
+            }
+        });
+    }
 
-    runner.on("pass", invokeHandler(function() {
-        allureReporter.endCase("passed");
-    }));
+    subscribeOnEvents(runner) {
+        const invokeHandler = (handler) => {
+            return function() {
+                try {
+                    return handler.apply(this, arguments);
+                } catch(error) {
+                    console.error('Internal error in Allure:', error); // eslint-disable-line no-console
+                }
+            };
+        };
 
-    runner.on("fail", invokeHandler(function(test, err) {
-        if(!allureReporter.getCurrentTest()) {
-            allureReporter.startCase(test.title);
-        }
-        var isAssertionError = err.name === "AssertionError" || err.code === "ERR_ASSERTION";
-        var status = isAssertionError ? "failed" : "broken";
-        if(global.onError) {
-            global.onError(err);
-        }
-        allureReporter.endCase(status, err);
-    }));
+        runner.on('suite', invokeHandler((suite) => {
+            allureReporter.startSuite(suite.fullTitle());
+        }));
 
-    runner.on("hook end", invokeHandler(function(hook) {
-        if(hook.title.indexOf('"after each" hook') === 0) {
-            allureReporter.endCase("passed");
-        }
-    }));
+        runner.on('suite end', invokeHandler(() => {
+            allureReporter.endSuite();
+        }));
+
+        runner.on('test', invokeHandler((test) => {
+            if (typeof test.currentRetry !== 'function' || !test.currentRetry()) {
+                allureReporter.startCase(test.title);
+            }
+
+            allureReporter.endCase();
+        }));
+
+        runner.on('pending', invokeHandler((test) => {
+            const currentTest = allureReporter.getCurrentTest();
+
+            if (currentTest && currentTest.name === test.title) {
+                allureReporter.endCase('skipped');
+            } else {
+                allureReporter.pendingCase(test.title);
+            }
+        }));
+
+        runner.on('pass', invokeHandler(() => {
+            allureReporter.endCase('passed');
+        }));
+
+        runner.on('fail', invokeHandler((test, err) => {
+            if (!allureReporter.getCurrentTest()) {
+                allureReporter.startCase(test.title);
+            }
+
+            let status = 'broken';
+
+            if (err instanceof AssertionError) {
+                status = 'failed';
+            }
+
+            if (!reporterOptions.ignoreErrors) {
+                if (err instanceof WebDriverError
+                    || err instanceof TypeError
+                    || err instanceof ReferenceError) {
+                        status = 'failed';
+                    }
+            }
+
+            if (typeof global.onError === 'function') {
+                global.onError(err);
+            }
+
+            allureReporter.endCase(status, err);
+        }));
+
+        runner.on('hook end', invokeHandler((hook) => {
+            if (hook.title.indexOf('\'after each\' hook') === 0) {
+                allureReporter.endCase('passed');
+            }
+        }));
+    }
 }
 
 module.exports = AllureReporter;

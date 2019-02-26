@@ -1,29 +1,34 @@
 {
-  "name": "mocha-allure-reporter",
-  "version": "1.4.0",
+  "name": "allure-mocha-reporter",
+  "version": "1.0.0",
   "description": "Mocha reporter for Allure framework",
   "main": "index.js",
-  "repository": "git@github.com:allure-framework/mocha-allure-reporter.git",
+  "repository": "git@github.com:glebmlk/allure-mocha-reporter.git",
   "scripts": {
     "pretest": "eslint --ignore-path=.gitignore .",
     "test": "npm run unit && npm run e2e-test",
     "unit": "mocha test/unit/",
     "e2e-clean": "rm -rf test/e2e/results",
-    "e2e-test": "npm run e2e-clean && node test/e2e/main.spec.js && allure generate test/e2e/results --clean -o test/e2e/report"
+    "e2e-test": "npm run e2e-clean && node test/e2e/main.spec.js && allure generate test/e2e/results --clean -o test/e2e/report",
+    "build": "npm run pretest && babel index.js -d dist",
+    "publish": "file=$(npm pack dist/) && npm publish $file"
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "allure-commandline": "^2.0.0",
-    "chai": "^4.1.2",
+    "allure-commandline": "^2.9.0",
+    "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
-    "eslint": "^4.19.1",
-    "libxmljs": "^0.18.0",
-    "mocha": "^5.1.1",
+    "eslint": "^5.14.1",
+    "libxmljs": "^0.19.5",
+    "mocha": "^6.0.1",
     "mockery": "^2.0.0",
-    "sinon": "^5.0.7",
-    "sinon-chai": "^3.0.0"
+    "sinon": "^7.2.4",
+    "sinon-chai": "^3.3.0"
   },
   "dependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.3",
+    "@babel/preset-env": "^7.3.1",
     "allure-js-commons": "^1.3.2"
   },
   "peerDependencies": {

@@ -1,13 +1,13 @@
 /*eslint-env mocha*/
-"use strict";
-var assert = require("assert");
+'use strict';
+let assert = require('assert');
 
-describe("Tests using assert", function() {
-    it("passing test", function() {
+describe('Tests using assert', function() {
+    it('passing test', function() {
         assert.ok(true);
     });
 
-    it("failed test", function() {
+    it('failed test', function() {
         assert.ok(false);
     });
 });

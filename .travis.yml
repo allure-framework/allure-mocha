@@ -20,4 +20,3 @@ before_install:
   - nvm install $TRAVIS_NODE_VERSION
 
 install: "npm install"
-script: "npm test"

@@ -4,3 +4,9 @@ test/e2e/report
 
 # Dependency directory
 node_modules
+
+.vscode
+.idea
+
+dist
+package-lock.json
